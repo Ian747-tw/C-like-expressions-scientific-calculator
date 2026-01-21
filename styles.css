@@ -1,11 +1,11 @@
 :root{
-  --bg: #f5f2ed;
-  --ink: #1b1a17;
-  --muted: #5a564f;
-  --card: #ffffff;
-  --accent: #c04b2c;
-  --accent-2: #2f5e7a;
-  --border: #d7d1c7;
+  --bg: #05070a;
+  --ink: #a6d8ff;
+  --muted: #7fb8e6;
+  --card: #0c1119;
+  --accent: #4aa8ff;
+  --accent-2: #9fd4ff;
+  --border: #1f2a3d;
 }
 
 *{ box-sizing: border-box; }
@@ -14,8 +14,8 @@ body{
   font-family: "IBM Plex Sans", "Space Grotesk", "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(1200px 600px at 15% -10%, #f0d7c8 0%, transparent 60%),
-    radial-gradient(900px 500px at 85% 0%, #cfe0e8 0%, transparent 55%),
+    radial-gradient(1200px 600px at 15% -10%, #0f1a2c 0%, transparent 60%),
+    radial-gradient(900px 500px at 85% 0%, #0b1422 0%, transparent 55%),
     var(--bg);
 }
 
@@ -67,7 +67,8 @@ textarea{
   border: 1px solid var(--border);
   font-size: 16px;
   font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  background: #fffaf3;
+  background: #0a0f18;
+  color: var(--ink);
   resize: vertical;
 }
 
@@ -83,7 +84,7 @@ button{
   padding: 10px 14px;
   font-weight: 600;
   background: var(--accent);
-  color: white;
+  color: #0a0f18;
   cursor: pointer;
 }
 button.ghost{
@@ -110,7 +111,8 @@ button.ghost{
 }
 
 code{
-  background: #f3f1ec;
+  background: #0a0f18;
+  color: var(--ink);
   padding: 2px 6px;
   border-radius: 8px;
 }
