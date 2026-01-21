@@ -1,0 +1,121 @@
+:root{
+  --bg: #f5f2ed;
+  --ink: #1b1a17;
+  --muted: #5a564f;
+  --card: #ffffff;
+  --accent: #c04b2c;
+  --accent-2: #2f5e7a;
+  --border: #d7d1c7;
+}
+
+*{ box-sizing: border-box; }
+body{
+  margin: 0;
+  font-family: "IBM Plex Sans", "Space Grotesk", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 15% -10%, #f0d7c8 0%, transparent 60%),
+    radial-gradient(900px 500px at 85% 0%, #cfe0e8 0%, transparent 55%),
+    var(--bg);
+}
+
+.page{
+  max-width: 980px;
+  margin: 40px auto 80px;
+  padding: 0 20px;
+}
+
+.hero{
+  margin-bottom: 24px;
+}
+.hero__meta{
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--accent-2);
+}
+.hero h1{
+  margin: 6px 0 4px;
+  font-size: 38px;
+}
+.hero p{
+  margin: 0;
+  color: var(--muted);
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  margin-bottom: 18px;
+}
+
+.label{
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+textarea{
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  font-size: 16px;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #fffaf3;
+  resize: vertical;
+}
+
+.row{
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button{
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 600;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+button.ghost{
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink);
+}
+
+.result{
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+.result__value{
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+code{
+  background: #f3f1ec;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+@media (max-width: 600px){
+  .hero h1{ font-size: 30px; }
+  .row{ flex-direction: column; }
+}

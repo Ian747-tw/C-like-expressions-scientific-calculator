@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scientific Calculator (Postfix)</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div class="hero__meta">Postfix Engine</div>
+        <h1>Scientific Calculator</h1>
+        <p>Infix input → preprocessing → postfix → evaluation.</p>
+      </header>
+
+      <section class="card">
+        <label class="label" for="expr">Expression</label>
+        <textarea id="expr" rows="3" spellcheck="false"
+          placeholder="Example: log(2,sqrt(16))+sin(cos(0))"></textarea>
+        <div class="row">
+          <button id="evalBtn">Evaluate</button>
+          <button id="clearBtn" class="ghost">Clear</button>
+        </div>
+        <div class="result">
+          <div class="label">Result</div>
+          <div id="resultValue" class="result__value">—</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Supported Operations</h2>
+        <div class="grid">
+          <div>
+            <h3>Functions</h3>
+            <p><code>sin cos exp log pow sqrt fabs</code></p>
+          </div>
+          <div>
+            <h3>Unary</h3>
+            <p><code>+ - ! ~</code></p>
+          </div>
+          <div>
+            <h3>Binary</h3>
+            <p><code>+ - * / % &lt;&lt; &gt;&gt; == != &amp; ^ | &amp;&amp; ||</code></p>
+          </div>
+          <div>
+            <h3>Notes</h3>
+            <p>Bitwise/shift/% use integer casts. Logical uses non‑zero truth.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
