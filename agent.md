@@ -1,29 +1,49 @@
-# Scientific Calculator Requirements
+# Scientific Calculator Requirements (Rewrite Plan)
 
-The program must read and evaluate integer infix expressions and print detailed
-conversion/evaluation output for each input line until EOF. The implementation
-should use pure recursion (no explicit stack or iterative parsing algorithms).
+The project has two implementations with different strategies and preprocessing
+rules. Both read and evaluate one infix expression per input line until EOF.
 
 ## Input handling
 - Repeatedly read a full line from stdin, length <= 1000000.
 - Stop when no more lines can be read (EOF).
 
-## Output requirements per line
-- Show stack operations that transform the infix expression to a postfix one.
-- Show the corresponding postfix expression.
-- Show the evaluated result. The result must match the value produced by a
-  normal C statement for the same expression.
+## calculator.cpp (pure recursion)
+- Use pure recursion only (no explicit stack or iterative parsing algorithms).
+- Before the string enters `main_solve`, apply preprocessing:
+  - `log(a,b)` -> `l(a,b;`
+  - `pow(a,b)` -> `p(a,b;`
+  - `sin(a)` -> `(a)s` (same for other single-argument functions)
+- Use the existing `string_process` function; extend it to handle doubles.
+
+## postfix.cpp (stack-based)
+- Convert infix to postfix using a stack, then evaluate postfix using a stack.
+- Preprocessing rules for function calls:
+  - `log(a,b)` -> `((a)(b))l`
+  - `sin(a)` -> `(a)s` (same for other single-argument functions)
+- Unary handling in infix-to-postfix:
+  - `-5` -> `(5)n`
+  - `+3` -> `(3)P`
+  - `... * -(...)` -> `... * (...)N`
 
 ## Supported operators and functions
 - Multiplicative: `*`, `/`, `%`.
 - Additive: binary `+`, binary `-`.
-- Bitwise: `&`, `^`, `|`, `<<`, `>>`.
+- Shift: `<<`, `>>`.
+- Equality: `==`, `!=` (return 1 if true, else 0).
+- Bitwise: `&`, `^`, `|`, unary `~`.
+- Logical: `&&`, `||`, unary `!` (C-like truth rules).
 - Parentheses: `(`, `)`.
-- Unary: unary `-`, unary `+`, bitwise not `~`.
-- Logical: `&&`, `||`, logical not `!`.
-  - `&&` returns 1 if both operands are non-zero, else 0.
-  - `||` returns 1 if either operand is non-zero, else 0.
-  - `!` returns 0 if operand is non-zero, else 1.
-- Equality: `==`, `!=`.
-  - Return 1 if true, else 0.
 - Functions: `sin`, `cos`, `exp`, `log`, `pow`, `sqrt`, `fabs`.
+
+## Operator precedence (C-like)
+1) Parentheses
+2) Unary: `+`, `-`, `~`, `!`
+3) Multiplicative: `*`, `/`, `%`
+4) Additive: `+`, `-`
+5) Shift: `<<`, `>>`
+6) Equality: `==`, `!=`
+7) Bitwise AND: `&`
+8) Bitwise XOR: `^`
+9) Bitwise OR: `|`
+10) Logical AND: `&&`
+11) Logical OR: `||`

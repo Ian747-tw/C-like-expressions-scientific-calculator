@@ -179,7 +179,6 @@ int column(int* index, char op, int subtotal, int num, string s){
                 subtotal += num;
                 return subtotal;
             }else{
-                cout<<"error"<<endl;
                 return subtotal;
             }
             
@@ -276,6 +275,7 @@ int pow_log(int* index, char opl, int subtotal, int num, string s){
         return ans;
     }else if(opl == 'p'){
         int ans = pow(double(tot1), double(tot2));
+        return ans;
     }
 }
 
