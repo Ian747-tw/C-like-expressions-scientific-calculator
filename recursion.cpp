@@ -1,16 +1,34 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int main_solve(int* index, char op, int subtotal, int num, string s);
-int multiply(int* index, char op, int subtotal, int num, string s);
-int column(int* index, char op, int subtotal, int num, string s);
-int pow_log(int* index, char opl, int subtotal, int num, string s);
-int main_pl(int* index, char op, int subtotal, int num, string s, int border);
+static inline bool is_func(char c){
+    return c == 's' || c == 'c' || c == 'e' || c == 'q' || c == 'f';
+}
 
-vector<int> digit;
+static inline double apply_func(char c, double v){
+    if(c == 's')
+        return sin(v);
+    if(c == 'c')
+        return cos(v);
+    if(c == 'e')
+        return exp(v);
+    if(c == 'q')
+        return sqrt(v);
+    if(c == 'f')
+        return fabs(v);
+    return v;
+}
+
+double main_solve(int* index, char op, double subtotal, double num, string s);
+double multiply(int* index, char op, double subtotal, double num, string s);
+double column(int* index, char op, double subtotal, double num, string s);
+double pow_log(int* index, char opl, double subtotal, double num, string s);
+double main_pl(int* index, char op, double subtotal, double num, string s, int border);
+
+vector<double> digit;
 int dt = 0;
 
-int main_solve(int* index, char op, int subtotal, int num, string s){
+double main_solve(int* index, char op, double subtotal, double num, string s){
     if(*index >= s.length()){
         if(op == '+')
             subtotal += num;
@@ -37,7 +55,7 @@ int main_solve(int* index, char op, int subtotal, int num, string s){
             return main_solve(index, s[*index - 1], subtotal, num, s); 
         }else if(s[*index] == '*' || s[*index] == '/'){
             (*index)++;
-            int temp = multiply(index, s[*index - 1], num, num, s);
+            double temp = multiply(index, s[*index - 1], num, num, s);
             if(op == '+')
                 subtotal += temp;
             else if(op == '-')
@@ -51,10 +69,16 @@ int main_solve(int* index, char op, int subtotal, int num, string s){
             return main_solve(index, s[*index - 1], subtotal, num, s);
         }else if(s[*index] == '('){
             (*index)++ ;
-            int temp = column(index, s[*index - 1], 0, num, s);
+            double temp = column(index, s[*index - 1], 0, num, s);
+            bool consumed_q = false;
+            if(*index + 1 < s.length() && s[*index + 1] == 'q'){
+                (*index)++;
+                temp = sqrt(temp);
+                consumed_q = true;
+            }
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
-                int temp2 = multiply(index, s[*index - 1], temp, temp, s);
+                double temp2 = multiply(index, s[*index - 1], temp, temp, s);
                 temp = temp2; 
             }
             
@@ -68,13 +92,16 @@ int main_solve(int* index, char op, int subtotal, int num, string s){
                 printf("error\n");
             //index handling
             (*index)++; 
-            return main_solve(index, s[*index - 1], subtotal, num, s);
+            char next_op = s[*index - 1];
+            if(consumed_q)
+                next_op = ')';
+            return main_solve(index, next_op, subtotal, num, s);
         }else if(s[*index] == 'p' || s[*index] == 'l'){
             (*index)++;
-            int temp = pow_log(index, s[*index - 1], 0, num, s);
+            double temp = pow_log(index, s[*index - 1], 0, num, s);
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
-                int temp2 = multiply(index, s[*index - 1], temp, temp, s);
+                double temp2 = multiply(index, s[*index - 1], temp, temp, s);
                 temp = temp2; 
             }
 
@@ -93,9 +120,10 @@ int main_solve(int* index, char op, int subtotal, int num, string s){
 
         } 
     }
+    return subtotal;
 }
 
-int multiply(int* index, char op, int subtotal, int num, string s){
+double multiply(int* index, char op, double subtotal, double num, string s){
     if(*index >= s.length()){
         if(op == '*')
             subtotal *= num;
@@ -120,14 +148,23 @@ int multiply(int* index, char op, int subtotal, int num, string s){
             return subtotal;
         }else if(s[*index] == '('){
             (*index)++;
-            int temp = column(index, s[*index - 1], 0, num, s);
+            double temp = column(index, s[*index - 1], 0, num, s);
+            bool consumed_q = false;
+            if(*index + 1 < s.length() && s[*index + 1] == 'q'){
+                (*index)++;
+                temp = sqrt(temp);
+                consumed_q = true;
+            }
             if(op == '*')
                 subtotal *= temp;
             else if(op == '/')
                 subtotal /= temp;
             //index
             (*index)++;
-            return multiply(index, s[*index - 1], subtotal, num, s);
+            char next_op = s[*index - 1];
+            if(consumed_q)
+                next_op = ')';
+            return multiply(index, next_op, subtotal, num, s);
         }else if(s[*index] == '*' || s[*index] == '/'){
             (*index)++;
             if(op == '*')
@@ -138,7 +175,7 @@ int multiply(int* index, char op, int subtotal, int num, string s){
  
         }else if(s[*index] == 'l' || s[*index] == 'p'){
             (*index)++;
-            int temp = pow_log(index, s[*index - 1] , 0, num, s);
+            double temp = pow_log(index, s[*index - 1] , 0, num, s);
             if(op == '*')
                 subtotal *= temp;
             else if(op == '/')
@@ -148,11 +185,15 @@ int multiply(int* index, char op, int subtotal, int num, string s){
             return multiply(index, s[*index - 1], subtotal, num, s);
         }
     }   
+    return subtotal;
 }
 
-int column(int* index, char op, int subtotal, int num, string s){
-    if(*index >= s.length())
+double column(int* index, char op, double subtotal, double num, string s){
+    if(*index >= s.length()){
+        cout<<"there"<<endl;
         return subtotal;
+    }
+        
     if(isdigit(s[*index])){
         num = digit[dt];
         dt++;
@@ -161,31 +202,32 @@ int column(int* index, char op, int subtotal, int num, string s){
     }else{
         if(s[*index] == ')'){
             if(op == ')'){
-                return subtotal;
+                //return subtotal;
             }else if(op == '*'){
-                return subtotal;
+                //return subtotal;
             }else if(op == '/'){
-                return subtotal;
+                //return subtotal;
             }else if(op == '+'){
                 subtotal += num;
-                return subtotal;
+                //return subtotal;
             }else if(op == '-'){
                 subtotal -= num;
-                return subtotal;
+                //return subtotal;
             }else if(op == '('){
                 subtotal += num;
-                return subtotal;
+                //return subtotal;
             }else if(op == 's'){
                 subtotal += num;
-                return subtotal;
+                //return subtotal;
             }else{
-                return subtotal;
+                //return subtotal;
             }
+            return subtotal;
             
             
         }else if(s[*index] == '*' || s[*index] == '/'){
             (*index)++;
-            int temp = multiply(index, s[*index - 1], num, num, s);
+            double temp = multiply(index, s[*index - 1], num, num, s);
             if(op == '+' || op == '(')
                 subtotal += temp;
             else if(op == '-')
@@ -198,11 +240,17 @@ int column(int* index, char op, int subtotal, int num, string s){
             }
         }else if(s[*index] == '('){
             (*index)++;
-            int temp = column(index, s[*index - 1], 0, num, s);
+            double temp = column(index, s[*index - 1], 0, num, s);
+            bool consumed_q = false;
+            if(*index + 1 < s.length() && s[*index + 1] == 'q'){
+                (*index)++;
+                temp = sqrt(temp);
+                consumed_q = true;
+            }
             
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
-                int temp2 = multiply(index, s[*index - 1], temp, temp, s);
+                double temp2 = multiply(index, s[*index - 1], temp, temp, s);
                 temp = temp2;
             }
 
@@ -211,7 +259,10 @@ int column(int* index, char op, int subtotal, int num, string s){
             else if(op == '-')
                 subtotal -= temp;
             (*index)++;
-            return column(index, s[*index - 1], subtotal, num, s);
+            char next_op = s[*index - 1];
+            if(consumed_q)
+                next_op = ')';
+            return column(index, next_op, subtotal, num, s);
         }else if(s[*index] == '+' || s[*index] == '-'){
             if(op == '+' || op == '(')
                 subtotal += num;
@@ -221,10 +272,10 @@ int column(int* index, char op, int subtotal, int num, string s){
             return column(index, s[*index - 1], subtotal, num, s);
         }else if(s[*index] == 'l' || s[*index] == 'p'){
             (*index)++;
-            int temp = pow_log(index, s[*index - 1], 0, num, s);
+            double temp = pow_log(index, s[*index - 1], 0, num, s);
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
-                int temp2 = multiply(index, s[*index - 1], temp, temp, s);
+                double temp2 = multiply(index, s[*index - 1], temp, temp, s);
                 temp = temp2;
             }
 
@@ -236,16 +287,17 @@ int column(int* index, char op, int subtotal, int num, string s){
             return column(index, s[*index - 1], subtotal, num, s);
         }
     }
+    return subtotal;
 }
 
-int pow_log(int* index, char opl, int subtotal, int num, string s){
+double pow_log(int* index, char opl, double subtotal, double num, string s){
     int tempi = *index;
     int tc = 0;
     //cout<<s[tempi]<<endl; //test
     while(true){
         if(s[tempi] == '(')
             tc++;
-        if(s[tempi] == ';')
+        if(s[tempi] == ')')
             tc--;
         if(tempi >= s.length())
             break;
@@ -257,29 +309,41 @@ int pow_log(int* index, char opl, int subtotal, int num, string s){
     }
         
     (*index)++;
+    //cout<<"test"<<s[*index + 1]<<endl;//test
+    //cout<<"s[tempi] = "<<s[tempi]<<endl;
     //cout<<"test2"<<endl; //test
     //cout<<"tempi"<<tempi<<endl; //test;
-    int tot1 = main_pl(index, 's', 0, num, s, tempi);
+    double tot1 = main_pl(index, 's', 0, num, s, tempi);
     //cout<<*index<<endl;//test
 
     tempi = *index;
-    while(s[tempi] != ';')
+    int tk = 0;
+    while(s[tempi] != ')' || tk != 0){
+        
+        if(s[tempi] == '(')
+            tk++;
+        if(s[tempi] == ')')
+            tk--;
+        if(tempi >= s.length())
+            break;
+        
         tempi++;
+        
+    }
     (*index)++;
     //cout<<"test"<<s[*index]<<endl;//test
-    int tot2 = main_pl(index, 's', 0, num, s, tempi);
+    double tot2 = main_pl(index, 's', 0, num, s, tempi);
     //cout<<tot2<<endl;
 
     if(opl == 'l'){
-        int ans = log10(float(tot2)) / log10(float(tot1));
-        return ans;
+        return log10(tot2) / log10(tot1);
     }else if(opl == 'p'){
-        int ans = pow(double(tot1), double(tot2));
-        return ans;
+        return pow(tot1, tot2);
     }
+    return 0;
 }
 
-int main_pl(int* index, char op, int subtotal, int num, string s, int border){
+double main_pl(int* index, char op, double subtotal, double num, string s, int border){
     if(*index >= border){
         if(op == '+')
             subtotal += num;
@@ -287,6 +351,7 @@ int main_pl(int* index, char op, int subtotal, int num, string s, int border){
             subtotal -= num;
         if(op == 's')
             subtotal += num;
+        
         return subtotal;
     }
 
@@ -307,7 +372,7 @@ int main_pl(int* index, char op, int subtotal, int num, string s, int border){
             return main_pl(index, s[*index - 1], subtotal, num, s, border); 
         }else if(s[*index] == '*' || s[*index] == '/'){
             (*index)++;
-            int temp = multiply(index, s[*index - 1], num, num, s);
+            double temp = multiply(index, s[*index - 1], num, num, s);
             if(op == '+')
                 subtotal += temp;
             else if(op == '-')
@@ -322,10 +387,16 @@ int main_pl(int* index, char op, int subtotal, int num, string s, int border){
             return main_pl(index, s[*index - 1], subtotal, num, s, border);
         }else if(s[*index] == '('){
             (*index)++ ;
-            int temp = column(index, s[*index - 1], 0, num, s);
+            double temp = column(index, s[*index - 1], 0, num, s);
+            bool consumed_q = false;
+            if(*index + 1 < s.length() && s[*index + 1] == 'q'){
+                (*index)++;
+                temp = sqrt(temp);
+                consumed_q = true;
+            }
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
-                int temp2 = multiply(index, s[*index - 1], temp, temp, s);
+                double temp2 = multiply(index, s[*index - 1], temp, temp, s);
                 temp = temp2; 
             }
             
@@ -340,15 +411,21 @@ int main_pl(int* index, char op, int subtotal, int num, string s, int border){
             
             
             //index handling
+            //cout<<"border: "<<s[border]<<endl;
+            //cout<<"s[index]: "<<s[*index]<<endl;
             if(*index < border)
-                (*index)++; 
-            return main_pl(index, s[*index - 1], subtotal, num, s, border);
+                (*index)++;
+            //cout<<s[*index]<<endl;
+            char next_op = s[*index - 1];
+            if(consumed_q)
+                next_op = ')';
+            return main_pl(index, next_op, subtotal, num, s, border);
         }else if(s[*index] == 'p' || s[*index] == 'l'){
             (*index)++;
-            int temp = pow_log(index, s[*index - 1], 0, num, s);
+            double temp = pow_log(index, s[*index - 1], 0, num, s);
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
-                int temp2 = multiply(index, s[*index - 1], temp, temp, s);
+                double temp2 = multiply(index, s[*index - 1], temp, temp, s);
                 temp = temp2; 
             }
 
@@ -368,6 +445,7 @@ int main_pl(int* index, char op, int subtotal, int num, string s, int border){
 
         } 
     }
+    return subtotal;
 }
 
 
@@ -378,10 +456,10 @@ string process(string s){
     int t = 0;
     string temp = "";
     for(int i = 0; i < n; i++){
-        if(isdigit(s[i])){
+        if(isdigit(s[i]) || s[i] == '.'){
             temp += s[i];
-        }else if(i && isdigit(s[i - 1])){
-            digit.push_back(stoi(temp));
+        }else if(i && (isdigit(s[i - 1]) || s[i - 1] == '.')){
+            digit.push_back(stod(temp));
             temp = "";
             res += '0';
             res += s[i];
@@ -392,7 +470,7 @@ string process(string s){
 
     if(temp != ""){
         res += '0';
-        digit.push_back(stoi(temp));
+        digit.push_back(stod(temp));
     }
 
     return res;
@@ -403,7 +481,7 @@ int main(){
     string s;
     cin>>s;
     s = process(s);
-    cout<<process(s)<<endl; //test
+    //cout<<process(s)<<endl; //test
     //for(int i = 0; i < digit.size(); i++)
         //cout<<digit[i]<<" "; //test
     //cout<<endl; //test

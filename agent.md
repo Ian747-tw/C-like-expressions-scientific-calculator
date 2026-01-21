@@ -10,8 +10,8 @@ rules. Both read and evaluate one infix expression per input line until EOF.
 ## calculator.cpp (pure recursion)
 - Use pure recursion only (no explicit stack or iterative parsing algorithms).
 - Before the string enters `main_solve`, apply preprocessing:
-  - `log(a,b)` -> `l(a,b;`
-  - `pow(a,b)` -> `p(a,b;`
+  - `log(a,b)` -> `l(a,b)`
+  - `pow(a,b)` -> `p(a,b)`
   - `sin(a)` -> `(a)s` (same for other single-argument functions)
 - Use the existing `string_process` function; extend it to handle doubles.
 
@@ -21,17 +21,17 @@ rules. Both read and evaluate one infix expression per input line until EOF.
   - `log(a,b)` -> `((a)(b))l`
   - `sin(a)` -> `(a)s` (same for other single-argument functions)
 - Unary handling in infix-to-postfix:
-  - `-5` -> `(5)n`
-  - `+3` -> `(3)P`
-  - `... * -(...)` -> `... * (...)N`
+  - `-5` -> `(5)u-`
+  - `+3` -> `(3)u+`
+  - `... * -(...)` -> `... * (...)u-`
 
 ## Supported operators and functions
 - Multiplicative: `*`, `/`, `%`.
 - Additive: binary `+`, binary `-`.
-- Shift: `<<`, `>>`.
-- Equality: `==`, `!=` (return 1 if true, else 0).
-- Bitwise: `&`, `^`, `|`, unary `~`.
-- Logical: `&&`, `||`, unary `!` (C-like truth rules).
+- Shift: `<<`, `>>`. (stack-based)
+- Equality: `==`, `!=` (return 1 if true, else 0). (stack-based)
+- Bitwise: `&`, `^`, `|`, unary `~`. (stack-based)
+- Logical: `&&`, `||`, unary `!` (C-like truth rules). (stack-based)
 - Parentheses: `(`, `)`.
 - Functions: `sin`, `cos`, `exp`, `log`, `pow`, `sqrt`, `fabs`.
 
