@@ -19,6 +19,114 @@ static inline double apply_func(char c, double v){
     return v;
 }
 
+string pow_log_process(string s){
+    for(int i = 0; i < (int)s.length(); i++){
+        if(s[i] == 'l' && i + 2 < (int)s.length() && s[i + 1] == 'o' && s[i + 2] == 'g'){
+            s = s.substr(0, i) + 'l' + s.substr(i + 3);
+        }else if(s[i] == 'p' && i + 2 < (int)s.length() && s[i + 1] == 'o' && s[i + 2] == 'w'){
+            s = s.substr(0, i) + 'p' + s.substr(i + 3);
+        }
+    }
+    return s;
+}
+
+string func_process(string s){
+    for(int i = 0; i < (int)s.length(); i++){
+        if(s[i] == 'e' && i + 1 < (int)s.length() && s[i + 1] == 'x'){
+            string substr0 = s.substr(0, i);
+            int tempi = i + 3;
+            string substr1 = "";
+            int ct = 0;
+
+            while(!(ct == 1 && s[tempi] == ')')){
+                substr1 += s[tempi];
+                if(s[tempi] == '(')
+                    ct++;
+                if(s[tempi] == ')')
+                    ct--;
+                tempi++;
+            }
+
+            substr1 += ')';
+            string substr2 = s.substr(tempi + 1);
+            s = substr0 + substr1 + s[i] + substr2;
+        }else if(s[i] == 's' && i + 1 < (int)s.length() && s[i + 1] == 'i'){
+            string substr0 = s.substr(0, i);
+            int tempi = i + 3;
+            string substr1 = "";
+            int ct = 0;
+
+            while(!(ct == 1 && s[tempi] == ')')){
+                substr1 += s[tempi];
+                if(s[tempi] == '(')
+                    ct++;
+                if(s[tempi] == ')')
+                    ct--;
+                tempi++;
+            }
+
+            substr1 += ')';
+            string substr2 = s.substr(tempi + 1);
+            s = substr0 + substr1 + s[i] + substr2;
+        }else if(s[i] == 'c' && i + 1 < (int)s.length() && s[i + 1] == 'o'){
+            string substr0 = s.substr(0, i);
+            int tempi = i + 3;
+            string substr1 = "";
+            int ct = 0;
+
+            while(!(ct == 1 && s[tempi] == ')')){
+                substr1 += s[tempi];
+                if(s[tempi] == '(')
+                    ct++;
+                if(s[tempi] == ')')
+                    ct--;
+                tempi++;
+            }
+
+            substr1 += ')';
+            string substr2 = s.substr(tempi + 1);
+            s = substr0 + substr1 + s[i] + substr2;
+        }else if(s[i] == 's' && i + 1 < (int)s.length() && s[i + 1] == 'q'){
+            string substr0 = s.substr(0, i);
+            int tempi = i + 4;
+            string substr1 = "";
+            int ct = 0;
+
+            while(!(ct == 1 && s[tempi] == ')')){
+                substr1 += s[tempi];
+                if(s[tempi] == '(')
+                    ct++;
+                if(s[tempi] == ')')
+                    ct--;
+                tempi++;
+            }
+
+            substr1 += ')';
+            string substr2 = s.substr(tempi + 1);
+            s = substr0 + substr1 + s[i + 1] + substr2;
+        }else if(s[i] == 'f' && i + 1 < (int)s.length() && s[i + 1] == 'a'){
+            string substr0 = s.substr(0, i);
+            int tempi = i + 4;
+            string substr1 = "";
+            int ct = 0;
+
+            while(!(ct == 1 && s[tempi] == ')')){
+                substr1 += s[tempi];
+                if(s[tempi] == '(')
+                    ct++;
+                if(s[tempi] == ')')
+                    ct--;
+                tempi++;
+            }
+
+            substr1 += ')';
+            string substr2 = s.substr(tempi + 1);
+            s = substr0 + substr1 + s[i] + substr2;
+        }
+    }
+    return s;
+}
+
 double main_solve(int* index, char op, double subtotal, double num, string s);
 double multiply(int* index, char op, double subtotal, double num, string s);
 double column(int* index, char op, double subtotal, double num, string s);
@@ -70,12 +178,6 @@ double main_solve(int* index, char op, double subtotal, double num, string s){
         }else if(s[*index] == '('){
             (*index)++ ;
             double temp = column(index, s[*index - 1], 0, num, s);
-            bool consumed_q = false;
-            if(*index + 1 < s.length() && s[*index + 1] == 'q'){
-                (*index)++;
-                temp = sqrt(temp);
-                consumed_q = true;
-            }
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
                 double temp2 = multiply(index, s[*index - 1], temp, temp, s);
@@ -92,10 +194,7 @@ double main_solve(int* index, char op, double subtotal, double num, string s){
                 printf("error\n");
             //index handling
             (*index)++; 
-            char next_op = s[*index - 1];
-            if(consumed_q)
-                next_op = ')';
-            return main_solve(index, next_op, subtotal, num, s);
+            return main_solve(index, s[*index - 1], subtotal, num, s);
         }else if(s[*index] == 'p' || s[*index] == 'l'){
             (*index)++;
             double temp = pow_log(index, s[*index - 1], 0, num, s);
@@ -149,22 +248,13 @@ double multiply(int* index, char op, double subtotal, double num, string s){
         }else if(s[*index] == '('){
             (*index)++;
             double temp = column(index, s[*index - 1], 0, num, s);
-            bool consumed_q = false;
-            if(*index + 1 < s.length() && s[*index + 1] == 'q'){
-                (*index)++;
-                temp = sqrt(temp);
-                consumed_q = true;
-            }
             if(op == '*')
                 subtotal *= temp;
             else if(op == '/')
                 subtotal /= temp;
             //index
             (*index)++;
-            char next_op = s[*index - 1];
-            if(consumed_q)
-                next_op = ')';
-            return multiply(index, next_op, subtotal, num, s);
+            return multiply(index, s[*index - 1], subtotal, num, s);
         }else if(s[*index] == '*' || s[*index] == '/'){
             (*index)++;
             if(op == '*')
@@ -222,6 +312,10 @@ double column(int* index, char op, double subtotal, double num, string s){
             }else{
                 //return subtotal;
             }
+            if(*index + 1 < s.length() && is_func(s[*index + 1])){
+                (*index)++;
+                subtotal = apply_func(s[*index], subtotal);
+            }
             return subtotal;
             
             
@@ -233,6 +327,10 @@ double column(int* index, char op, double subtotal, double num, string s){
             else if(op == '-')
                 subtotal -= temp;
             if(s[*index] == ')'){
+                if(*index + 1 < s.length() && is_func(s[*index + 1])){
+                    (*index)++;
+                    subtotal = apply_func(s[*index], subtotal);
+                }
                 return subtotal;
             }else{
                 (*index)++;
@@ -241,12 +339,6 @@ double column(int* index, char op, double subtotal, double num, string s){
         }else if(s[*index] == '('){
             (*index)++;
             double temp = column(index, s[*index - 1], 0, num, s);
-            bool consumed_q = false;
-            if(*index + 1 < s.length() && s[*index + 1] == 'q'){
-                (*index)++;
-                temp = sqrt(temp);
-                consumed_q = true;
-            }
             
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
@@ -259,10 +351,7 @@ double column(int* index, char op, double subtotal, double num, string s){
             else if(op == '-')
                 subtotal -= temp;
             (*index)++;
-            char next_op = s[*index - 1];
-            if(consumed_q)
-                next_op = ')';
-            return column(index, next_op, subtotal, num, s);
+            return column(index, s[*index - 1], subtotal, num, s);
         }else if(s[*index] == '+' || s[*index] == '-'){
             if(op == '+' || op == '(')
                 subtotal += num;
@@ -388,12 +477,6 @@ double main_pl(int* index, char op, double subtotal, double num, string s, int b
         }else if(s[*index] == '('){
             (*index)++ ;
             double temp = column(index, s[*index - 1], 0, num, s);
-            bool consumed_q = false;
-            if(*index + 1 < s.length() && s[*index + 1] == 'q'){
-                (*index)++;
-                temp = sqrt(temp);
-                consumed_q = true;
-            }
             if(*index + 1 < s.length() && (s[*index + 1] == '*' || s[*index + 1] == '/')){
                 (*index)++;
                 double temp2 = multiply(index, s[*index - 1], temp, temp, s);
@@ -416,10 +499,7 @@ double main_pl(int* index, char op, double subtotal, double num, string s, int b
             if(*index < border)
                 (*index)++;
             //cout<<s[*index]<<endl;
-            char next_op = s[*index - 1];
-            if(consumed_q)
-                next_op = ')';
-            return main_pl(index, next_op, subtotal, num, s, border);
+            return main_pl(index, s[*index - 1], subtotal, num, s, border);
         }else if(s[*index] == 'p' || s[*index] == 'l'){
             (*index)++;
             double temp = pow_log(index, s[*index - 1], 0, num, s);
@@ -480,6 +560,8 @@ string process(string s){
 int main(){
     string s;
     cin>>s;
+    s = pow_log_process(s);
+    s = func_process(s);
     s = process(s);
     //cout<<process(s)<<endl; //test
     //for(int i = 0; i < digit.size(); i++)
