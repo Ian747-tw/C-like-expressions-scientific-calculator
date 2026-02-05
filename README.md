@@ -1,4 +1,4 @@
-# Scientific Calculator Requirements (Rewrite Plan)
+# Scientific Calculator Requirements 
 
 The project has two implementations with different strategies and preprocessing
 rules. Both read and evaluate one infix expression per input line until EOF.
